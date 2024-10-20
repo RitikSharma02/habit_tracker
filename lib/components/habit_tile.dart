@@ -45,13 +45,19 @@ class HabitTile extends StatelessWidget {
           child:  Padding(
             padding: EdgeInsets.all(24.0),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // checkbox
-                Checkbox(value: habitCompleted,
-        
-                    onChanged: onChanged  ),
-                // habit name
-                Text(habitName),
+                Expanded(child: Row(
+                  children: [
+                    // checkbox
+                    Checkbox(
+                        value: habitCompleted,
+                        onChanged: onChanged  ),
+                    // habit name
+                    Text(habitName),
+                  ],
+                )),
+                Icon(Icons.arrow_back),
               ],
             ),
           ),

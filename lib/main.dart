@@ -7,6 +7,9 @@ void main() async {
   // initialization
  await Hive.initFlutter();
  // opening a database
+
+await Hive.openBox("Habit_Database");
+
   runApp(const MyApp());
 
 }
