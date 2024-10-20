@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../components/habit_tile.dart';
 import '../components/my_fab.dart';
-import '../components/new_habit_box.dart';
+import '../components/my-alert-box.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -14,10 +14,10 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
 
   List todayHabitList =
-
   [
-  // ['habit', bool ]
+
     ['morning run', true,],
+    ['after run', true,],
     ['evening run', false]
   ];
 
@@ -29,13 +29,70 @@ class _HomepageState extends State<Homepage> {
     });
   }
 // create a new habit
-
+final _newHabitController = TextEditingController();
   void createNewHabit (){
     // showAlert dialog to show info to user
 showDialog(context: context,
     builder: (context){
-  return EnterNewHabitBox();
+  return MyAlertBox(
+    controller: _newHabitController,
+    onSave: saveNewHabit,
+    onCancel: cancelDialogBox,
+    hintText: 'Enter Habit Name..',
+  );
 });
+  }
+ // save new habit
+  void saveNewHabit( ){
+
+    setState(() {
+      todayHabitList.add([_newHabitController.text, false]);
+    });
+
+
+//clear text field
+    _newHabitController.clear();
+// pop dialog box
+    Navigator.pop(context);
+  }
+  // cancel new habit
+  void cancelDialogBox(){
+// clear text field
+    _newHabitController.clear();
+// pop dialog box
+    Navigator.pop(context);
+  }
+//open habit Settings
+
+  void openHabitSettings(int index){
+    showDialog(context: context, builder: (context){
+
+return MyAlertBox(
+    controller: _newHabitController ,
+    onSave : ()=> saveExistingHabit(index),
+    onCancel: cancelDialogBox,
+     hintText: todayHabitList[index][0],
+);
+
+    });
+  }
+
+  // save Existing habit
+
+  void saveExistingHabit(int index){
+    setState(() {
+      todayHabitList[index][0] = _newHabitController.text;
+    });
+    _newHabitController.clear();
+    Navigator.pop(context);
+  }
+
+  // delete index
+  void deleteHabit(int index){
+    setState(() {
+      todayHabitList.removeAt(index);
+
+    });
   }
 
   @override
@@ -51,6 +108,8 @@ showDialog(context: context,
     habitName: todayHabitList[index][0],
     habitCompleted: todayHabitList[index][1],
     onChanged: (value) => checkBoxTapped(value, index),
+   settingsTapped: (context) => openHabitSettings(index),
+   deleteTapped: (context) => deleteHabit(index),
 );
         
       },
